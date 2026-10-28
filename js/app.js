@@ -45,8 +45,67 @@ function ensureSeries() {
 }
 
 function commit() {
-  save(store);
+  persist();
   render();
+}
+
+// ---------- Partage (lien) ----------
+
+const TRAINING_PARAM = "t";
+
+function toBase64Url(text) {
+  const bytes = new TextEncoder().encode(text);
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function fromBase64Url(s) {
+  const b64 = s.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(s.length / 4) * 4, "=");
+  return new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)));
+}
+
+// format compact : [[note, [figureId, ...]], ...] (les identifiants de saut ne sont pas partagés)
+function encodeTraining() {
+  return toBase64Url(JSON.stringify(store.series.map((se) => [se.note, se.figures])));
+}
+
+function decodeTraining(token) {
+  const data = JSON.parse(fromBase64Url(token));
+  if (!Array.isArray(data)) throw new Error("format");
+  return data.map(([note, figures]) => ({
+    id: uid(),
+    note: String(note ?? ""),
+    figures: (figures ?? []).map(String).filter((id) => FIG_BY_ID[id]),
+  }));
+}
+
+const hasContent = (s) => s.series.some((se) => se.figures.length || se.note);
+
+// L'adresse suit l'entraînement courant : le lien partagé est toujours à jour.
+function syncUrl() {
+  const hash = hasContent(store) ? `#${TRAINING_PARAM}=${encodeTraining()}` : "";
+  history.replaceState(null, "", location.pathname + location.search + hash);
+}
+
+function persist() {
+  save(store);
+  syncUrl();
+}
+
+// Ouvre un lien partagé : charge son entraînement (après confirmation si le local a du contenu).
+function applySharedLink() {
+  const token = new URLSearchParams(location.hash.slice(1)).get(TRAINING_PARAM);
+  if (!token) return;
+  let shared;
+  try {
+    shared = decodeTraining(token);
+  } catch {
+    return; // lien invalide : ignoré
+  }
+  if (token === encodeTraining()) return;
+  if (hasContent(store) && !confirm("Remplacer votre entraînement actuel par celui du lien partagé ?")) return;
+  store = { series: shared };
 }
 
 // ---------- Rendu ----------
@@ -141,7 +200,7 @@ function seriesCard(s, se, i) {
       value: se.note,
       oninput: (e) => {
         se.note = e.target.value;
-        save(store);
+        persist();
       },
     }),
   );
@@ -397,37 +456,17 @@ $("#viewer").addEventListener("touchend", (e) => {
 
 // ---------- Barre du haut ----------
 
-$("#btn-print").addEventListener("click", () => window.print());
-
-$("#btn-export").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify({ format: "vr4-training", version: 2, series: store.series }, null, 2)], { type: "application/json" });
-  const a = h("a", { href: URL.createObjectURL(blob), download: "entrainement.vr4.json" });
-  a.click();
-  URL.revokeObjectURL(a.href);
-});
-
-$("#btn-import").addEventListener("click", () => $("#import-file").click());
-$("#import-file").addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  e.target.value = "";
-  if (!file) return;
+$("#btn-share").addEventListener("click", async () => {
+  const btn = $("#btn-share");
+  let label = "Lien copié ✓";
   try {
-    const data = JSON.parse(await file.text());
-    // accepte aussi les fichiers exportés par l'ancienne version (liste d'entraînements)
-    const series = Array.isArray(data.series) ? data.series : data.sessions?.[0]?.series;
-    if (!Array.isArray(series)) throw new Error("aucun saut trouvé");
-    const hasContent = store.series.some((se) => se.figures.length);
-    if (hasContent && !confirm("Remplacer l'entraînement actuel par celui du fichier ?")) return;
-    store.series = series.map((se) => ({
-      id: uid(),
-      note: String(se.note ?? ""),
-      figures: (se.figures ?? []).map(String).filter((id) => FIG_BY_ID[id]),
-    }));
-    activeSeriesId = null;
-    commit();
-  } catch (err) {
-    alert(`Import impossible : ${err.message}`);
+    await navigator.clipboard.writeText(location.href);
+  } catch {
+    window.prompt("Copiez ce lien :", location.href);
+    label = "Lien affiché";
   }
+  btn.textContent = label;
+  setTimeout(() => (btn.textContent = "Partager"), 1500);
 });
 
 $("#btn-palette").addEventListener("click", () => document.body.classList.toggle("palette-open"));
@@ -435,7 +474,8 @@ $("#search").addEventListener("input", renderPalette);
 
 // ---------- Démarrage ----------
 
+applySharedLink();
 ensureSeries();
-save(store);
+persist();
 renderPalette();
 render();

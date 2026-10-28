@@ -17,7 +17,7 @@ Puis ouvrir http://localhost:8000. Un serveur est nécessaire car les modules JS
 - **Ajouter des figures** : cliquer sur une figure dans la liste de droite (l'ajoute au saut actif) ou la glisser dans n'importe quel saut.
 - **Réorganiser** : glisser les figures (dans un saut ou vers un autre), glisser la poignée ⠿ pour déplacer un saut. Boutons ← → × / ↑ ↓ en alternative (tactile).
 - **Revoir** : ▶ affiche les figures une à une en plein écran (flèches du clavier, espace, swipe, Échap pour fermer).
-- **Exporter / Importer** : sauvegarde d'un entraînement en JSON. Les données sont aussi conservées dans le navigateur (localStorage).
+- **Partager** : copie le lien de l'entraînement courant. L'adresse se met à jour à chaque modification ; ouvrir le lien charge l'entraînement. Les données sont aussi conservées dans le navigateur (localStorage).
 
 ## Fichiers
 
