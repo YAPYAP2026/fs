@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VR4 – Choix de police</title>
+<style>
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #0f131b;
+    color: #e6e9f0;
+    font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  h1 { margin: 0 0 6px; font-size: 26px; color: #5b8cff; }
+  p.hint { margin: 0 0 22px; color: #8b93a7; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: #1c2230;
+    border: 1px solid #2e3748;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .card header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .card .num { font-size: 22px; font-weight: 700; color: #5b8cff; }
+  .card .name { color: #8b93a7; font-size: 14px; }
+  .sample {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: radial-gradient(circle at 50% 40%, #66748a, #465163);
+    overflow: hidden;
+  }
+  .sample .letter {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(255, 255, 255, .35);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .sample .letter { font-size: 200px; }
+  .label { margin-top: 6px; font-size: 13px; color: #8b93a7; }
+</style>
+</head>
+<body>
+<h1>Choix de police</h1>
+<p class="hint">Dites-moi le numéro de la police qui vous plaît.</p>
+
+<div class="grid">
+  <section class="card">
+    <header><span class="num">1</span><span class="name">Segoe UI Black</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Segoe UI Black', 'Arial Black', sans-serif; font-weight: 900;">A</div>
+    </div>
+    <div class="label">Moderne, sans-serif très épaisse</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">2</span><span class="name">Arial Black</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Arial Black', sans-serif; font-weight: 900;">A</div>
+    </div>
+    <div class="label">Large, très épaisse, sobre</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">3</span><span class="name">Impact</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: Impact, sans-serif;">A</div>
+    </div>
+    <div class="label">Haute, condensée, style affiche</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">4</span><span class="name">Bahnschrift SemiBold Condensed</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Bahnschrift', 'Arial Narrow', sans-serif; font-weight: 600; font-stretch: condensed;">A</div>
+    </div>
+    <div class="label">Technique, industrielle (DIN)</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">5</span><span class="name">Franklin Gothic Heavy</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Franklin Gothic Heavy', 'Franklin Gothic', Arial, sans-serif; font-weight: 900;">A</div>
+    </div>
+    <div class="label">Journal classique, forte et claire</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">6</span><span class="name">Rockwell Extra Bold</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Rockwell Extra Bold', Rockwell, Georgia, serif; font-weight: 900;">A</div>
+    </div>
+    <div class="label">Empattements, robuste et sympa</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">7</span><span class="name">Georgia Bold</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: Georgia, serif; font-weight: 700;">A</div>
+    </div>
+    <div class="label">Élégante, lisible, classique</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">8</span><span class="name">Cooper Black</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Cooper Black', 'Cooper Std', Georgia, serif; font-weight: 900;">A</div>
+    </div>
+    <div class="label">Arrondie, rétro, ludique</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">9</span><span class="name">Century Gothic Bold</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-weight: 700;">A</div>
+    </div>
+    <div class="label">Géométrique, lettres rondes, aérée</div>
+  </section>
+
+  <section class="card">
+    <header><span class="num">10</span><span class="name">Haettenschweiler</span></header>
+    <div class="sample">
+      <div class="letter" style="font-family: 'Haettenschweiler', Impact, sans-serif;">A</div>
+    </div>
+    <div class="label">Ultra condensée, très dense</div>
+  </section>
+</div>
+</body>
+</html>
