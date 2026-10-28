@@ -54,7 +54,6 @@ function commit() {
 function render() {
   ensureSeries();
   renderSession();
-  renderPaletteTarget();
 }
 
 function renderSession() {
@@ -184,16 +183,9 @@ function setActive(id) {
   if (activeSeriesId === id) return;
   activeSeriesId = id;
   document.querySelectorAll(".series").forEach((c) => c.classList.toggle("active", c.dataset.id === id));
-  renderPaletteTarget();
 }
 
 // ---------- Palette ----------
-
-function renderPaletteTarget() {
-  const s = current();
-  const i = s.series.findIndex((se) => se.id === activeSeriesId);
-  $("#palette-target").textContent = i >= 0 ? `Cliquer ajoute au Saut ${i + 1}` : "";
-}
 
 function renderPalette() {
   const q = $("#search").value.trim().toLowerCase();
