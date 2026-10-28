@@ -197,8 +197,7 @@ function renderPaletteTarget() {
 
 function renderPalette() {
   const q = $("#search").value.trim().toLowerCase();
-  const level = $("#level").value;
-  const match = (f) => f.levels.includes(level) && (!q || f.id.toLowerCase() === q);
+  const match = (f) => !q || f.id.toLowerCase() === q;
 
   const group = (title, type) => {
     const figs = FIGURES.filter((f) => f.type === type && match(f));
@@ -441,7 +440,6 @@ $("#import-file").addEventListener("change", async (e) => {
 
 $("#btn-palette").addEventListener("click", () => document.body.classList.toggle("palette-open"));
 $("#search").addEventListener("input", renderPalette);
-$("#level").addEventListener("change", renderPalette);
 
 // ---------- Démarrage ----------
 

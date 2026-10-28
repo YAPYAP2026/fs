@@ -17,7 +17,6 @@ Puis ouvrir http://localhost:8000. Un serveur est nécessaire car les modules JS
 - **Ajouter des figures** : cliquer sur une figure dans la liste de droite (l'ajoute au saut actif) ou la glisser dans n'importe quel saut.
 - **Réorganiser** : glisser les figures (dans un saut ou vers un autre), glisser la poignée ⠿ pour déplacer un saut. Boutons ← → × / ↑ ↓ en alternative (tactile).
 - **Revoir** : ▶ affiche les figures une à une en plein écran (flèches du clavier, espace, swipe, Échap pour fermer).
-- **Niveau** : le filtre N2 masque les figures réservées au N1 (vignettes roses du PDF).
 - **Exporter / Importer** : sauvegarde d'un entraînement en JSON. Les données sont aussi conservées dans le navigateur (localStorage).
 
 ## Fichiers

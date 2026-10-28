@@ -233,7 +233,7 @@ body.dragging .fig-row.drop-end { border-color: var(--accent); }
 }
 #palette-target { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
 .palette-filters { display: flex; gap: 6px; }
-.palette-filters input { flex: 1; min-width: 0; }
+.palette-filters input { flex: 1; min-width: 0; font-size: 17px; padding: 9px 12px; }
 .palette-group { padding: 8px 12px; }
 .palette-group h3 { margin: 4px 0 8px; font-size: 14px; color: var(--muted); }
 .palette-grid { display: flex; flex-wrap: wrap; gap: 6px; }
