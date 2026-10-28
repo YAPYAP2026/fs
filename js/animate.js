@@ -2,7 +2,7 @@
 // pivotent d'une formation à la suivante. Utilisée par la vue plein écran "Revoir".
 
 import { drawJumperWith, el } from "./designs.js";
-import { DESIGN, drawArrow } from "./skydiver.js";
+import { DESIGN, drawArrow, nameText, setNameText } from "./skydiver.js";
 
 export const DURATION = 800; // ms
 
@@ -13,6 +13,7 @@ const turn = (a, b) => ((((b - a) % 360) + 540) % 360) - 180;
 
 export function createStage() {
   const svg = el("svg", { viewBox: "0 0 480 480", class: "formation stage" });
+  const name = nameText(svg); // nom de la figure, sous les parachutistes
   const jumperLayer = el("g", {}, svg);
   const arrowLayer = el("g", { class: "stage-arrows" }, svg);
   const nodes = {}; // couleur -> <g>
@@ -21,8 +22,9 @@ export function createStage() {
 
   const place = (c, p) => nodes[c].setAttribute("transform", `translate(${p.x} ${p.y}) rotate(${p.r})`);
 
-  function show(frame, { animate = true } = {}) {
+  function show(frame, { animate = true, label } = {}) {
     cancelAnimationFrame(raf);
+    if (label !== undefined) setNameText(name, label);
     const from = { ...state };
     const to = {};
     for (const j of frame.jumpers) {

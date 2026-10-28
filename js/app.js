@@ -374,7 +374,7 @@ function renderViewer(animate) {
       btn("Suivante →", () => stepViewer(1), { cls: "primary" }),
     ),
   );
-  stage.show(f.frames[it.k], { animate });
+  stage.show(f.frames[it.k], { animate, label: figureLabel(f) });
 }
 
 document.addEventListener("keydown", (e) => {

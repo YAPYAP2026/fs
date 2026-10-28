@@ -27,17 +27,30 @@ export function drawArrow(parent, a) {
   return g;
 }
 
+// Nom de la figure en grand, derrière les parachutistes (hauteur de la carte).
+// 560px ≈ 400px de capitales ; baseline à 440 pour la centrer verticalement.
+export function nameText(parent, label = "") {
+  const t = el("text", { class: "frame-name", x: 240, y: 440, "font-size": 560, "text-anchor": "middle" }, parent);
+  setNameText(t, label);
+  return t;
+}
+
+export function setNameText(t, label) {
+  t.textContent = label;
+  // deux caractères (ex. « 12 ») : on resserre pour rester dans la carte
+  if (label.length > 1) {
+    t.setAttribute("textLength", 440);
+    t.setAttribute("lengthAdjust", "spacingAndGlyphs");
+  } else {
+    t.removeAttribute("textLength");
+    t.removeAttribute("lengthAdjust");
+  }
+}
+
 // Une vignette complète (formation + flèches) dans un SVG 480x480.
-// label : nom de la figure, écrit en grand derrière les parachutistes (hauteur de la carte).
 export function formationSvg(frame, label) {
   const svg = el("svg", { viewBox: "0 0 480 480", class: "formation" });
-  if (label) {
-    // 560px ≈ 400px de capitales ; baseline à 440 pour la centrer verticalement
-    const attrs = { class: "frame-name", x: 240, y: 440, "font-size": 560, "text-anchor": "middle" };
-    // deux caractères (ex. « 12 ») : on resserre pour rester dans la carte
-    if (label.length > 1) Object.assign(attrs, { textLength: 440, lengthAdjust: "spacingAndGlyphs" });
-    el("text", attrs, svg).textContent = label;
-  }
+  if (label) nameText(svg, label);
   // positions ajustées pour que les mains touchent leurs prises (corps et rotations inchangés)
   const placed = options.snap ? snapFormation(frame, DESIGN.pose) : frame;
   for (const j of placed.jumpers) drawJumperWith(DESIGN, svg, j);
