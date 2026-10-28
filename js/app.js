@@ -23,6 +23,15 @@ function h(tag, attrs = {}, ...children) {
   return el;
 }
 
+// icônes SVG (trait, couleur du texte)
+const svgIcon = (inner) => {
+  const t = document.createElement("template");
+  t.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
+  return t.content.firstElementChild;
+};
+const ICON_PLAY = svgIcon('<polygon points="6 4 20 12 6 20 6 4" fill="currentColor"/>');
+const ICON_TRASH = svgIcon('<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>');
+
 const btn = (label, onclick, { title, disabled, cls } = {}) =>
   h("button", {
     class: cls,
@@ -171,16 +180,10 @@ function seriesCard(s, se, i) {
       h("h2", {}, `Saut ${i + 1}`),
       h("span", { class: "meta" }, `${se.figures.length} figure${se.figures.length > 1 ? "s" : ""} · ${points(se.figures)} pts`),
       h("div", { class: "actions no-print" },
-        btn("▶ Revoir", () => openViewer(s, i), { disabled: !se.figures.length, cls: "primary" }),
+        btn(ICON_PLAY.cloneNode(true), () => openViewer(s, i), { title: "Revoir", disabled: !se.figures.length, cls: "primary" }),
         btn("↑", () => move(i - 1), { title: "Monter", disabled: i === 0 }),
         btn("↓", () => move(i + 1), { title: "Descendre", disabled: i === last }),
-        btn("⧉", () => {
-          const copy = { ...structuredClone(se), id: uid() };
-          s.series.splice(i + 1, 0, copy);
-          activeSeriesId = copy.id;
-          commit();
-        }, { title: "Dupliquer le saut" }),
-        btn("🗑", () => {
+        btn(ICON_TRASH.cloneNode(true), () => {
           if (se.figures.length && !confirm(`Supprimer le saut ${i + 1} ?`)) return;
           s.series.splice(i, 1);
           if (!s.series.length) s.series.push(newSeries());
