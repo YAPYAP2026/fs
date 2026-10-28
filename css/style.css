@@ -72,6 +72,7 @@ select, input[type="search"], input[type="date"] {
 .topbar h1 { margin: 0; font-size: 26px; color: var(--accent); letter-spacing: .05em; }
 .topbar select { min-width: 220px; max-width: 320px; }
 .btn-group { display: flex; gap: 4px; }
+#btn-share { display: inline-flex; align-items: center; gap: 6px; }
 .mobile-only { display: none; }
 
 /* ---------- Mise en page ---------- */

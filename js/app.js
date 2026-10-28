@@ -453,16 +453,16 @@ $("#viewer").addEventListener("touchend", (e) => {
 // ---------- Barre du haut ----------
 
 $("#btn-share").addEventListener("click", async () => {
-  const btn = $("#btn-share");
-  let label = "Lien copié ✓";
+  const label = $("#share-label");
+  let text = "Copié ✓";
   try {
     await navigator.clipboard.writeText(location.href);
   } catch {
     window.prompt("Copiez ce lien :", location.href);
-    label = "Lien affiché";
+    text = "Lien affiché";
   }
-  btn.textContent = label;
-  setTimeout(() => (btn.textContent = "Partager"), 1500);
+  label.textContent = text;
+  setTimeout(() => (label.textContent = "Copier"), 1500);
 });
 
 $("#btn-palette").addEventListener("click", () => document.body.classList.toggle("palette-open"));
