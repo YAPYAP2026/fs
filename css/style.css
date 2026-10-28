@@ -345,7 +345,11 @@ body.viewer-open { overflow: hidden; }
   .palette-head { padding: 10px; }
   .palette-filters input { font-size: 18px; padding: 10px 12px; }
   .palette-group { padding: 8px 10px; }
-  .pal-fig { padding: 4px; }
+  /* palette : 3 colonnes pleine largeur, vignettes qui remplissent leur case */
+  #palette .palette-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  #palette .pal-fig { padding: 4px; min-width: 0; }
+  #palette .visual { width: 100%; }
+  #palette .frame { flex: 1 1 0; width: auto; min-width: 0; }
 
   /* Revoir : contrôles empilés, cibles de 48px */
   .viewer-top, .viewer-bottom { flex-wrap: wrap; padding: 10px 12px; }
