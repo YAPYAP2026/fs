@@ -32,8 +32,8 @@ export function drawArrow(parent, a) {
 export function formationSvg(frame, label) {
   const svg = el("svg", { viewBox: "0 0 480 480", class: "formation" });
   if (label) {
-    // 640px ≈ 458px de capitales : la lettre couvre toute la hauteur ; baseline à 469 pour la centrer
-    const attrs = { class: "frame-name", x: 240, y: 469, "font-size": 640, "text-anchor": "middle" };
+    // 560px ≈ 400px de capitales ; baseline à 440 pour la centrer verticalement
+    const attrs = { class: "frame-name", x: 240, y: 440, "font-size": 560, "text-anchor": "middle" };
     // deux caractères (ex. « 12 ») : on resserre pour rester dans la carte
     if (label.length > 1) Object.assign(attrs, { textLength: 440, lengthAdjust: "spacingAndGlyphs" });
     el("text", attrs, svg).textContent = label;
