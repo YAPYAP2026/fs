@@ -53,31 +53,27 @@ function commit() {
 
 const TRAINING_PARAM = "t";
 
-function toBase64Url(text) {
-  const bytes = new TextEncoder().encode(text);
-  let bin = "";
-  for (const b of bytes) bin += String.fromCharCode(b);
-  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
+// Format du lien, court : une lettre par figure (son rang dans FIGURES), les sauts séparés par ",",
+// et la note optionnelle après "|" (encodée en URL). Ex. « AB3,7|Échauffement » = 3 sauts.
+const CODE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const FIG_CODE = Object.fromEntries(FIGURES.map((f, i) => [f.id, CODE[i]]));
+const FIG_BY_CODE = Object.fromEntries(FIGURES.map((f, i) => [CODE[i], f.id]));
 
-function fromBase64Url(s) {
-  const b64 = s.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(s.length / 4) * 4, "=");
-  return new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)));
-}
-
-// format compact : [[note, [figureId, ...]], ...] (les identifiants de saut ne sont pas partagés)
 function encodeTraining() {
-  return toBase64Url(JSON.stringify(store.series.map((se) => [se.note, se.figures])));
+  return store.series
+    .map((se) => se.figures.map((id) => FIG_CODE[id]).join("") + (se.note ? `|${encodeURIComponent(se.note)}` : ""))
+    .join(",");
 }
 
 function decodeTraining(token) {
-  const data = JSON.parse(fromBase64Url(token));
-  if (!Array.isArray(data)) throw new Error("format");
-  return data.map(([note, figures]) => ({
-    id: uid(),
-    note: String(note ?? ""),
-    figures: (figures ?? []).map(String).filter((id) => FIG_BY_ID[id]),
-  }));
+  return token.split(",").map((part) => {
+    const [figs, note = ""] = part.split("|");
+    return {
+      id: uid(),
+      note: decodeURIComponent(note),
+      figures: [...figs].map((c) => FIG_BY_CODE[c]).filter(Boolean),
+    };
+  });
 }
 
 const hasContent = (s) => s.series.some((se) => se.figures.length || se.note);
