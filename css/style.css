@@ -204,7 +204,7 @@ body.dragging .fig-row.drop-end { border-color: var(--accent); }
 .frame svg { display: block; width: 100%; height: 100%; }
 .frame-name {
   fill: var(--name);
-  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-family: "Urbanist", "Segoe UI Black", "Arial Black", sans-serif;
   font-weight: 900;
   pointer-events: none;
 }
