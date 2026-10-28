@@ -13,6 +13,7 @@
   /* fond clair derrière les parachutistes (contours noirs illisibles sur fond sombre) */
   --sky: radial-gradient(circle at 50% 40%, #66748a, #465163);
   --fs: 110px; /* taille d'une vignette */
+  --name: rgba(255, 255, 255, .2); /* nom de la figure, derrière les parachutistes */
 }
 
 * { box-sizing: border-box; }
@@ -201,6 +202,12 @@ body.dragging .fig-row.drop-end { border-color: var(--accent); }
   print-color-adjust: exact;
 }
 .frame svg { display: block; width: 100%; height: 100%; }
+.frame-name {
+  fill: var(--name);
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-weight: 900;
+  pointer-events: none;
+}
 .frame-label {
   position: absolute;
   bottom: 6px;
@@ -333,6 +340,7 @@ body.viewer-open { overflow: hidden; }
     --bg: #fff; --card: #fff; --raised: #fff; --ink: #1d2433; --muted: #555; --line: #ccc;
     --sky: linear-gradient(#fff, #fff);
     --fs: 80px;
+    --name: rgba(30, 42, 92, .12);
   }
   body { display: block; }
   .no-print, .fig-tools { display: none !important; }

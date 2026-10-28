@@ -28,8 +28,16 @@ export function drawArrow(parent, a) {
 }
 
 // Une vignette complète (formation + flèches) dans un SVG 480x480.
-export function formationSvg(frame) {
+// label : nom de la figure, écrit en grand derrière les parachutistes (hauteur de la carte).
+export function formationSvg(frame, label) {
   const svg = el("svg", { viewBox: "0 0 480 480", class: "formation" });
+  if (label) {
+    // 640px ≈ 458px de capitales : la lettre couvre toute la hauteur ; baseline à 469 pour la centrer
+    const attrs = { class: "frame-name", x: 240, y: 469, "font-size": 640, "text-anchor": "middle" };
+    // deux caractères (ex. « 12 ») : on resserre pour rester dans la carte
+    if (label.length > 1) Object.assign(attrs, { textLength: 440, lengthAdjust: "spacingAndGlyphs" });
+    el("text", attrs, svg).textContent = label;
+  }
   // positions ajustées pour que les mains touchent leurs prises (corps et rotations inchangés)
   const placed = options.snap ? snapFormation(frame, DESIGN.pose) : frame;
   for (const j of placed.jumpers) drawJumperWith(DESIGN, svg, j);

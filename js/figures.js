@@ -34,10 +34,10 @@ export const FIG_BY_ID = Object.fromEntries(FIGURES.map((f) => [f.id, f]));
 
 export const figureLabel = (f) => f.id;
 
-export function frameEl(frame) {
+export function frameEl(frame, label) {
   const d = document.createElement("div");
   d.className = "frame";
-  d.append(formationSvg(frame));
+  d.append(formationSvg(frame, label));
   return d;
 }
 
@@ -45,6 +45,6 @@ export function frameEl(frame) {
 export function figureVisual(f) {
   const v = document.createElement("div");
   v.className = `visual ${f.type}`;
-  f.frames.forEach((frame) => v.append(frameEl(frame)));
+  f.frames.forEach((frame) => v.append(frameEl(frame, figureLabel(f))));
   return v;
 }
