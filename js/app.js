@@ -51,7 +51,7 @@ function commit() {
 
 // ---------- Partage (lien) ----------
 
-const TRAINING_PARAM = "t";
+const TRAINING_PARAM = "share";
 
 // Format du lien, court : une lettre par figure (son rang dans FIGURES), les sauts séparés par ",",
 // et la note optionnelle après "|" (encodée en URL). Ex. « AB3,7|Échauffement » = 3 sauts.
