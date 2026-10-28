@@ -299,18 +299,39 @@ body.viewer-open { overflow: hidden; }
 /* ---------- Mobile ---------- */
 
 @media (max-width: 860px) {
-  :root { --fs: 84px; }
+  :root { --fs: min(84px, 27vw); }
   .mobile-only { display: inline-block; }
   .layout { grid-template-columns: 1fr; }
-  main { padding: 12px 10px 60px; }
-  .topbar select { min-width: 0; flex: 1; }
+  main { padding: 12px 10px 80px; }
+
+  /* barre du haut : tient sur deux lignes, cibles tactiles de 44px */
+  .topbar { padding: 8px 10px; gap: 6px 10px; }
+  .topbar h1 { font-size: 22px; }
+  .topbar .stats { font-size: 14px; }
+  .topbar button { min-height: 44px; padding: 8px 12px; }
+  .btn-group { margin-left: auto; }
+
+  .session-name { font-size: 22px; }
+  .series { padding: 10px 10px 12px; }
+  .series-head { flex-wrap: wrap; gap: 6px 8px; }
+  .series-head .actions { width: 100%; margin-left: 0; justify-content: flex-end; }
+  .series-head .actions button { min-width: 44px; min-height: 44px; padding: 6px 10px; }
+  .series-head .meta { font-size: 14px; }
+  .note { font-size: 16px; }
+
+  /* boutons ← → × sous chaque figure : toujours visibles, faciles à toucher */
+  .fig-tools { opacity: 1; }
+  .fig-tools button { min-width: 40px; min-height: 40px; padding: 4px 10px; font-size: 18px; }
+
+  /* palette : bas de l'écran, vignettes plus grandes */
   #palette {
+    --fs: 80px;
     position: fixed;
     top: auto;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 55vh;
+    height: 60vh;
     z-index: 20;
     border-left: 0;
     border-top: 1px solid var(--line);
@@ -319,7 +340,19 @@ body.viewer-open { overflow: hidden; }
     transition: transform .2s;
   }
   body.palette-open #palette { transform: none; }
-  .fig-tools { opacity: 1; }
+  .palette-head { padding: 10px; }
+  .palette-filters input { font-size: 18px; padding: 10px 12px; }
+  .palette-group { padding: 8px 10px; }
+  .pal-fig { padding: 4px; }
+
+  /* Revoir : contrôles empilés, cibles de 48px */
+  .viewer-top, .viewer-bottom { flex-wrap: wrap; padding: 10px 12px; }
+  .viewer-bottom { justify-content: center; }
+  .viewer-next { order: -1; flex-basis: 100%; font-size: 15px; }
+  #viewer button { min-height: 48px; padding: 10px 16px; }
+  .viewer-bottom button { flex: 1 1 0; }
+  .viewer-main h2 { font-size: 22px; }
+  .viewer-main .stage-frame { width: min(80vh, 94vw); }
   .viewer-main .visual.block { flex-direction: column; --fs: min(26vh, 80vw); }
 }
 
