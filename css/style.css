@@ -299,7 +299,9 @@ body.viewer-open { overflow: hidden; }
 /* ---------- Mobile ---------- */
 
 @media (max-width: 860px) {
-  :root { --fs: min(84px, 27vw); }
+  /* 3 figures par ligne sur toute la largeur (marges, espaces et bordures compris) */
+  :root { --fs: calc((100vw - 150px) / 3); }
+  .fig-row { justify-content: center; }
   .mobile-only { display: inline-block; }
   .layout { grid-template-columns: 1fr; }
   main { padding: 12px 10px 80px; }
@@ -331,7 +333,7 @@ body.viewer-open { overflow: hidden; }
     left: 0;
     right: 0;
     bottom: 0;
-    height: 60vh;
+    height: 33vh;
     z-index: 20;
     border-left: 0;
     border-top: 1px solid var(--line);
