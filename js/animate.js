@@ -22,9 +22,29 @@ export function createStage() {
 
   const place = (c, p) => nodes[c].setAttribute("transform", `translate(${p.x} ${p.y}) rotate(${p.r})`);
 
+  // nom de la figure : rétrécit et s'efface, puis la nouvelle lettre grandit en apparaissant
+  let shownLabel = null;
+  function swapName(label, animate) {
+    if (label === shownLabel) return;
+    shownLabel = label;
+    name.getAnimations().forEach((a) => a.cancel());
+    if (!animate) return setNameText(name, label);
+    const out = name.animate(
+      [{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(.85)" }],
+      { duration: 180, easing: "ease-in" },
+    );
+    out.onfinish = () => {
+      setNameText(name, label);
+      name.animate(
+        [{ opacity: 0, transform: "scale(1.12)" }, { opacity: 1, transform: "scale(1)" }],
+        { duration: 340, easing: "ease-out" },
+      );
+    };
+  }
+
   function show(frame, { animate = true, label } = {}) {
     cancelAnimationFrame(raf);
-    if (label !== undefined) setNameText(name, label);
+    if (label !== undefined) swapName(label, animate);
     const from = { ...state };
     const to = {};
     for (const j of frame.jumpers) {

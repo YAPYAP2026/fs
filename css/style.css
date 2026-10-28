@@ -207,6 +207,8 @@ body.dragging .fig-row.drop-end { border-color: var(--accent); }
   font-family: "Urbanist", "Segoe UI Black", "Arial Black", sans-serif;
   font-weight: 900;
   pointer-events: none;
+  transform-box: view-box;
+  transform-origin: 50% 50%; /* l'animation de changement de lettre pivote au centre */
 }
 .frame-label {
   position: absolute;
