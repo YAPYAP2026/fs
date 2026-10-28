@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>VR4 – contrôle du découpage</title>
+<link rel="stylesheet" href="../css/style.css?v=2">
+<style>
+  body { padding: 16px; display: block; }
+  .grid { display: flex; flex-wrap: wrap; gap: 16px; --fs: 140px; }
+  .item { background: var(--card); padding: 8px; border-radius: 8px; box-shadow: 0 1px 3px #0006; }
+  .item .frame { outline: 1px solid red; }
+</style>
+</head>
+<body>
+<h1>Contrôle du découpage des figures</h1>
+<p>Chaque vignette doit contenir exactement une figure, avec son numéro/lettre en haut à gauche.</p>
+<div class="grid" id="grid"></div>
+<script type="module">
+  import { FIGURES, figureVisual, figureLabel } from "../js/figures.js";
+  import { options } from "../js/skydiver.js";
+  const grid = document.getElementById("grid");
+  // ?f=J : une seule figure · fs=480 : taille · ref=1 : image du PDF en transparence derrière le rendu
+  // · snap=1 : rapprochement automatique des prises au rendu (inutile : déjà fait dans les données)
+  const params = new URLSearchParams(location.search);
+  if (params.get("fs")) grid.style.setProperty("--fs", `${params.get("fs")}px`);
+  options.snap = params.get("snap") === "1";
+  for (const f of FIGURES.filter((f) => !params.get("f") || f.id === params.get("f"))) {
+    const item = document.createElement("div");
+    item.className = "item";
+    const visual = figureVisual(f);
+    if (params.get("ref")) {
+      [...visual.children].forEach((frame, k) => {
+        const name = f.type === "random" ? f.id : `${f.id}-${k + 1}`;
+        frame.style.background = `center / cover url("../assets/figures/${name}.png"), var(--sky)`;
+        frame.querySelector("svg").style.opacity = 0.6;
+      });
+    }
+    item.append(visual, Object.assign(document.createElement("div"), { textContent: `${figureLabel(f)} [${f.levels.join("/")}]` }));
+    grid.append(item);
+  }
+</script>
+</body>
+</html>
