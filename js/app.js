@@ -211,10 +211,7 @@ function seriesCard(s, se, i) {
 function figTile(se, fid, j) {
   const f = FIG_BY_ID[fid];
   if (!f) return null;
-  const swap = (to) => {
-    se.figures.splice(to, 0, se.figures.splice(j, 1)[0]);
-    commit();
-  };
+  const swap = (to) => swapFigures(se, j, to);
   return h("div", {
     class: `fig ${f.type}`,
     draggable: "true",
@@ -235,6 +232,32 @@ function figTile(se, fid, j) {
       }, { title: "Retirer" }),
     ),
   );
+}
+
+// Déplace la figure j en position `to` ; les tuiles glissent (FLIP) vers leur nouvelle place.
+function swapFigures(se, j, to) {
+  const cardSel = `.series[data-id="${se.id}"] .fig`;
+  const before = [...document.querySelectorAll(cardSel)].map((t) => t.getBoundingClientRect());
+  // ordre d'origine de chaque tuile, une fois la figure déplacée
+  const order = before.map((_, k) => k);
+  order.splice(to, 0, order.splice(j, 1)[0]);
+
+  se.figures.splice(to, 0, se.figures.splice(j, 1)[0]);
+  commit();
+
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  [...document.querySelectorAll(cardSel)].forEach((tile, k) => {
+    const from = before[order[k]];
+    const r = tile.getBoundingClientRect();
+    const dx = from.left - r.left;
+    const dy = from.top - r.top;
+    if (dx || dy) {
+      tile.animate(
+        [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+        { duration: 250, easing: "ease-out" },
+      );
+    }
+  });
 }
 
 function setActive(id) {
