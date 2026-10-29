@@ -5,6 +5,7 @@ import { createStage } from "./animate.js";
 let store = load();
 let activeSeriesId = null;
 let drag = null; // { kind: "fig", figId, from: seriesId | null, index } | { kind: "series", seriesId }
+let indicator = null; // { el, cls } : indicateur de dépôt affiché
 let viewer = null; // { session, items: [{ si, fi }], pos }
 
 const $ = (sel) => document.querySelector(sel);
@@ -309,6 +310,15 @@ function clearIndicators() {
   document.querySelectorAll(".drop-before, .drop-after, .drop-end").forEach((el) =>
     el.classList.remove("drop-before", "drop-after", "drop-end"),
   );
+  indicator = null;
+}
+
+// Ne touche au DOM que si la cible du dépôt change (dragover se répète en continu).
+function setIndicator(el, cls) {
+  if (indicator?.el === el && indicator.cls === cls) return;
+  clearIndicators();
+  el.classList.add(cls);
+  indicator = { el, cls };
 }
 
 function figInsertIndex(e, row) {
@@ -323,16 +333,15 @@ function figInsertIndex(e, row) {
 function onDragOver(e, card, row) {
   if (!drag) return;
   e.preventDefault();
-  clearIndicators();
   if (drag.kind === "fig") {
     e.dataTransfer.dropEffect = drag.from === null ? "copy" : "move";
     const idx = figInsertIndex(e, row);
     const tiles = row.querySelectorAll(".fig");
-    if (idx < tiles.length) tiles[idx].classList.add("drop-before");
-    else row.classList.add("drop-end");
+    if (idx < tiles.length) setIndicator(tiles[idx], "drop-before");
+    else setIndicator(row, "drop-end");
   } else {
     const r = card.getBoundingClientRect();
-    card.classList.add(e.clientY < r.top + r.height / 2 ? "drop-before" : "drop-after");
+    setIndicator(card, e.clientY < r.top + r.height / 2 ? "drop-before" : "drop-after");
   }
 }
 
