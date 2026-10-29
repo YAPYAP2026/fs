@@ -357,6 +357,8 @@ body.viewer-open { overflow: hidden; }
     transition: transform .2s;
   }
   body.palette-open #palette { transform: none; }
+  /* palette ouverte : on peut faire défiler jusqu'au bas du saut, au-dessus de la palette */
+  body.palette-open main { padding-bottom: calc(33vh + 16px); }
   .palette-head { padding: 10px; }
   .palette-filters input { font-size: 18px; padding: 10px 12px; }
   .palette-group { padding: 8px 10px; }
