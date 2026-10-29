@@ -262,6 +262,7 @@ body.dragging .fig-row.drop-end { border-color: var(--accent); }
 .palette-group { padding: 8px 12px; }
 .palette-group h3 { margin: 4px 0 8px; font-size: 17px; color: var(--muted); }
 .palette-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.palette-pull { display: none; }
 .pal-fig {
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -348,7 +349,7 @@ body.viewer-open { overflow: hidden; }
     left: 0;
     right: 0;
     bottom: 0;
-    height: 33vh;
+    height: var(--palette-h, 33vh);
     z-index: 20;
     border-left: 0;
     border-top: 1px solid var(--line);
@@ -358,12 +359,17 @@ body.viewer-open { overflow: hidden; }
   }
   body.palette-open #palette { transform: none; }
   /* palette ouverte : on peut faire défiler jusqu'au bas du saut, au-dessus de la palette */
-  body.palette-open main { padding-bottom: calc(33vh + 16px); }
+  body.palette-open main { padding-bottom: calc(var(--palette-h, 33vh) + 16px); }
+  /* tirette : barre à tirer pour régler la hauteur de la palette */
+  .palette-pull { display: flex; justify-content: center; padding: 8px 0 4px; cursor: ns-resize; touch-action: none; }
+  .palette-pull span { width: 48px; height: 5px; border-radius: 3px; background: var(--muted); }
   .palette-head { padding: 10px; }
   .palette-filters input { font-size: 18px; padding: 10px 12px; }
   .palette-group { padding: 8px 10px; }
   /* palette : 3 colonnes pleine largeur, vignettes qui remplissent leur case */
   #palette .palette-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  /* blocs : 2 par ligne */
+  #palette .palette-group.block .palette-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #palette .pal-fig { padding: 4px; min-width: 0; }
   #palette .visual { width: 100%; }
   #palette .frame { flex: 1 1 0; width: auto; min-width: 0; }

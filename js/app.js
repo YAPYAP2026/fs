@@ -298,7 +298,7 @@ function renderPalette() {
   };
 
   $("#palette-list").replaceChildren(
-    group("Randoms", "random") ?? "",
+    group("Lettres", "random") ?? "",
     group("Blocs", "block") ?? "",
   );
 }
@@ -502,6 +502,24 @@ $("#btn-share").addEventListener("click", async () => {
 });
 
 $("#btn-palette").addEventListener("click", () => document.body.classList.toggle("palette-open"));
+
+// Tirette de la palette (téléphone) : tirer vers le haut ou le bas pour régler sa hauteur
+$("#palette-pull").addEventListener("pointerdown", (e) => {
+  const startY = e.clientY;
+  const startH = $("#palette").getBoundingClientRect().height;
+  const move = (ev) => {
+    const h = Math.min(innerHeight * 0.7, Math.max(innerHeight * 0.15, startH + startY - ev.clientY));
+    document.documentElement.style.setProperty("--palette-h", `${h}px`);
+  };
+  const stop = () => {
+    removeEventListener("pointermove", move);
+    removeEventListener("pointerup", stop);
+    removeEventListener("pointercancel", stop);
+  };
+  addEventListener("pointermove", move);
+  addEventListener("pointerup", stop);
+  addEventListener("pointercancel", stop);
+});
 $("#search").addEventListener("input", renderPalette);
 
 // ---------- Démarrage ----------
