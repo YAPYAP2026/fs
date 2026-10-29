@@ -135,6 +135,23 @@ body.dragging .fig-row.drop-end { border-color: var(--accent); }
 
 .empty { color: var(--muted); margin: auto; font-style: italic; }
 
+/* case « + » en pointillés : ajoute une figure au saut */
+.fig-add {
+  width: calc(var(--fs) + 14px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px dashed var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: calc(var(--fs) * .45);
+  font-weight: 300;
+  line-height: 1;
+}
+.fig-add:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); background: transparent; }
+
 .fig {
   position: relative;
   background: var(--raised);
@@ -324,7 +341,7 @@ body.viewer-open { overflow: hidden; }
 
   /* boutons ← → × sous chaque figure : toujours visibles, faciles à toucher */
   .fig-tools { opacity: 1; }
-  .fig-tools button { min-width: 40px; min-height: 40px; padding: 4px 10px; font-size: 18px; }
+  .fig-tools button { min-width: 30px; min-height: 30px; padding: 0 6px; font-size: 15px; }
 
   /* palette : bas de l'écran, vignettes plus grandes */
   #palette {
