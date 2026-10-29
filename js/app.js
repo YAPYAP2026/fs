@@ -48,7 +48,6 @@ const btn = (label, onclick, { title, disabled, cls } = {}) =>
 
 const newSeries = () => ({ id: uid(), note: "", figures: [] });
 const current = () => store;
-const points = (figs) => figs.reduce((n, id) => n + (FIG_BY_ID[id]?.points ?? 0), 0);
 
 function ensureSeries() {
   if (!store.series.length) store.series.push(newSeries());
@@ -183,8 +182,7 @@ function seriesCard(s, se, i) {
         onmousedown: () => (card.draggable = true),
         onmouseup: () => (card.draggable = false),
       }, "⠿"),
-      h("h2", {}, `Saut ${i + 1}`),
-      h("span", { class: "meta" }, `${se.figures.length} figure${se.figures.length > 1 ? "s" : ""} · ${points(se.figures)} pts`),
+      h("h2", {}, se.figures.length ? se.figures.join(" · ") : `Saut ${i + 1}`),
       h("div", { class: "actions no-print" },
         btn(ICON_PLAY.cloneNode(true), () => openViewer(s, i), { title: "Revoir", disabled: !se.figures.length, cls: "primary" }),
         btn("↑", () => move(i - 1), { title: "Monter", disabled: i === 0 }),

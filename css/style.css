@@ -115,8 +115,7 @@ main { padding: 16px 20px 40px; min-width: 0; }
 .series.drop-after { box-shadow: 0 4px 0 var(--accent); }
 
 .series-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.series-head h2 { margin: 0; font-size: 21px; }
-.series-head .meta { color: var(--muted); font-size: 16px; }
+.series-head h2 { flex: 1; min-width: 0; margin: 0; font-size: 21px; overflow-wrap: anywhere; }
 .series-head .actions { margin-left: auto; display: flex; gap: 4px; }
 .handle { cursor: grab; color: var(--muted); font-size: 18px; user-select: none; padding: 0 2px; }
 
@@ -333,10 +332,8 @@ body.viewer-open { overflow: hidden; }
 
   .session-name { font-size: 22px; }
   .series { padding: 10px 10px 12px; }
-  .series-head { flex-wrap: wrap; gap: 6px 8px; }
-  .series-head .actions { width: 100%; margin-left: 0; justify-content: flex-end; }
+  .series-head { gap: 6px 8px; }
   .series-head .actions button { min-width: 44px; min-height: 44px; padding: 6px 10px; }
-  .series-head .meta { font-size: 14px; }
   .note { font-size: 16px; }
 
   /* boutons ← → × sous chaque figure : toujours visibles, faciles à toucher */
