@@ -42,11 +42,9 @@ export function frameEl(frame, label) {
 }
 
 // Rendu complet d'une figure : 1 vignette pour un random, 3 (départ/inter/arrivée) pour un bloc.
-// Un bloc affiche son nom une seule fois, au centre (vignette du milieu).
 export function figureVisual(f) {
   const v = document.createElement("div");
   v.className = `visual ${f.type}`;
-  const mid = Math.floor(f.frames.length / 2);
-  f.frames.forEach((frame, k) => v.append(frameEl(frame, k === mid ? figureLabel(f) : "")));
+  f.frames.forEach((frame) => v.append(frameEl(frame, figureLabel(f))));
   return v;
 }
