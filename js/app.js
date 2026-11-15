@@ -425,10 +425,12 @@ function renderViewer(animate) {
   const se = session.series[it.si];
   const f = itemFigure(it);
 
-  // petite frise des vignettes du bloc, l'étape en cours en surbrillance
-  const strip = f.type === "block"
-    ? h("div", { class: "viewer-strip" }, f.frames.map((_, k) => h("span", { class: k === it.k ? "on" : "" }, BLOCK_FRAME_LABELS[k])))
-    : null;
+  // petite frise des vignettes du bloc, l'étape en cours en surbrillance ; pour une lettre elle
+  // reste en place, invisible, pour que la liste des figures ne bouge pas d'une figure à l'autre
+  const isBlock = f.type === "block";
+  const strip = h("div", { class: `viewer-strip${isBlock ? "" : " ghost"}` },
+    BLOCK_FRAME_LABELS.map((label, k) => h("span", { class: isBlock && k === it.k ? "on" : "" }, label)),
+  );
 
   // tout l'enchaînement du vol : la figure en cours en blanc, les autres en gris
   const sequence = h("div", { class: "viewer-seq" },

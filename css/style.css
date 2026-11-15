@@ -303,6 +303,7 @@ body.viewer-open { overflow: hidden; }
 .viewer-main .frame { border-radius: 14px; }
 .viewer-main .stage-frame { width: min(68vh, 92vw); }
 .viewer-strip { display: flex; gap: 6px; }
+.viewer-strip.ghost { visibility: hidden; }
 .viewer-strip span { padding: 2px 10px; border-radius: 10px; background: var(--raised); color: var(--muted); font-size: 16px; }
 .viewer-strip span.on { background: var(--accent); color: #fff; }
 .viewer-main .visual.random { --fs: min(70vh, 90vw); }
