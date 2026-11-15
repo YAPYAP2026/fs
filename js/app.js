@@ -150,17 +150,18 @@ function seriesCard(s, se, i) {
   const row = h("div", { class: "fig-row" },
     se.figures.map((fid, j) => figTile(se, fid, j)),
     se.figures.length ? null : h("p", { class: "empty no-print" }, "Cliquez ou glissez des figures depuis la liste pour composer ce saut."),
-    h("button", {
-      class: "fig-add no-print",
-      title: "Ajouter une figure à ce saut",
-      onclick: () => document.body.classList.add("palette-open"), // ouvre la palette sur téléphone
-    }, "+"),
+    // case « + » seulement pour un saut vide (le clic sur le saut ouvre la palette)
+    se.figures.length ? null : h("button", { class: "fig-add no-print", title: "Ajouter une figure à ce saut" }, "+"),
   );
 
   const card = h("section", {
     class: `series${se.id === activeSeriesId ? " active" : ""}`,
     dataset: { id: se.id },
-    onclick: () => setActive(se.id),
+    onclick: (e) => {
+      setActive(se.id);
+      // sélectionner un saut fait remonter la palette (téléphone), sauf en écrivant une note
+      if (!e.target.closest("textarea")) document.body.classList.add("palette-open");
+    },
     ondragstart: (e) => {
       if (e.target !== card) return;
       startDrag(e, { kind: "series", seriesId: se.id });
