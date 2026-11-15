@@ -13,9 +13,9 @@ Puis ouvrir http://localhost:8000. Un serveur est nécessaire car les modules JS
 ## Utilisation
 
 - **Entraînement** : choisir, créer, dupliquer ou supprimer depuis la barre du haut. Le nom et la date se modifient directement en haut de la page.
-- **Sauts** : chaque carte est une série de figures. Le saut encadré en bleu est le saut *actif*.
-- **Ajouter des figures** : cliquer sur une figure dans la liste de droite (l'ajoute au saut actif) ou la glisser dans n'importe quel saut.
-- **Réorganiser** : glisser les figures (dans un saut ou vers un autre), glisser la poignée ⠿ pour déplacer un saut. Boutons ← → × / ↑ ↓ en alternative (tactile).
+- **Vols** : chaque carte est une série de figures. Le vol encadré en bleu est le vol *actif*.
+- **Ajouter des figures** : cliquer sur une figure dans la liste de droite (l'ajoute au vol actif) ou la glisser dans n'importe quel vol.
+- **Réorganiser** : glisser les figures (dans un vol ou vers un autre), glisser la poignée ⠿ pour déplacer un vol. Boutons ← → × / ↑ ↓ en alternative (tactile).
 - **Revoir** : ▶ affiche les figures une à une en plein écran (flèches du clavier, espace, swipe, Échap pour fermer).
 - **Partager** : copie le lien de l'entraînement courant. L'adresse se met à jour à chaque modification ; ouvrir le lien charge l'entraînement. Les données sont aussi conservées dans le navigateur (localStorage).
 

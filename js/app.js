@@ -62,8 +62,8 @@ function commit() {
 
 const TRAINING_PARAM = "share";
 
-// Format du lien, court : une lettre par figure (son rang dans FIGURES), les sauts séparés par ",",
-// Ex. « AB3,7 » = 2 sauts. Un ancien lien peut contenir une note après "|" : elle est ignorée.
+// Format du lien, court : une lettre par figure (son rang dans FIGURES), les vols séparés par ",",
+// Ex. « AB3,7 » = 2 vols. Un ancien lien peut contenir une note après "|" : elle est ignorée.
 const CODE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const FIG_CODE = Object.fromEntries(FIGURES.map((f, i) => [f.id, CODE[i]]));
 const FIG_BY_CODE = Object.fromEntries(FIGURES.map((f, i) => [CODE[i], f.id]));
@@ -123,7 +123,7 @@ function renderSession() {
   const s = current();
   if (!s.series.some((se) => se.id === activeSeriesId)) activeSeriesId = s.series[0]?.id ?? null;
   const nFigs = s.series.reduce((n, se) => n + se.figures.length, 0);
-  $("#stats").textContent = `${s.series.length} saut${s.series.length > 1 ? "s" : ""} · ${nFigs} figure${nFigs > 1 ? "s" : ""}`;
+  $("#stats").textContent = `${s.series.length} vol${s.series.length > 1 ? "s" : ""} · ${nFigs} figure${nFigs > 1 ? "s" : ""}`;
 
   $("#session").replaceChildren(
     ...s.series.map((se, i) => seriesCard(s, se, i)),
@@ -135,7 +135,7 @@ function renderSession() {
         activeSeriesId = ns.id;
         commit();
       },
-    }, "+ Ajouter un saut"),
+    }, "+ Ajouter un vol"),
   );
 }
 
@@ -148,9 +148,9 @@ function seriesCard(s, se, i) {
 
   const row = h("div", { class: "fig-row" },
     se.figures.map((fid, j) => figTile(se, fid, j)),
-    se.figures.length ? null : h("p", { class: "empty no-print" }, "Cliquez ou glissez des figures depuis la liste pour composer ce saut."),
-    // case « + » seulement pour un saut vide (le clic sur le saut ouvre la palette)
-    se.figures.length ? null : h("button", { class: "fig-add no-print", title: "Ajouter une figure à ce saut" }, "+"),
+    se.figures.length ? null : h("p", { class: "empty no-print" }, "Cliquez ou glissez des figures depuis la liste pour composer ce vol."),
+    // case « + » seulement pour un vol vide (le clic sur le vol ouvre la palette)
+    se.figures.length ? null : h("button", { class: "fig-add no-print", title: "Ajouter une figure à ce vol" }, "+"),
   );
 
   const card = h("section", {
@@ -158,7 +158,7 @@ function seriesCard(s, se, i) {
     dataset: { id: se.id },
     onclick: (e) => {
       setActive(se.id);
-      // sélectionner un saut fait remonter la palette (téléphone)
+      // sélectionner un vol fait remonter la palette (téléphone)
       document.body.classList.add("palette-open");
     },
     ondragstart: (e) => {
@@ -178,21 +178,21 @@ function seriesCard(s, se, i) {
     h("header", { class: "series-head" },
       h("span", {
         class: "handle no-print",
-        title: "Glisser pour réordonner les sauts",
+        title: "Glisser pour réordonner les vols",
         onmousedown: () => (card.draggable = true),
         onmouseup: () => (card.draggable = false),
       }, "⠿"),
-      h("h2", {}, se.figures.length ? se.figures.join(" · ") : `Saut ${i + 1}`),
+      h("h2", {}, se.figures.length ? se.figures.join(" · ") : `Vol ${i + 1}`),
       h("div", { class: "actions no-print" },
         btn(ICON_PLAY.cloneNode(true), () => openViewer(s, i), { title: "Revoir", disabled: !se.figures.length, cls: "primary" }),
         btn("↑", () => move(i - 1), { title: "Monter", disabled: i === 0 }),
         btn("↓", () => move(i + 1), { title: "Descendre", disabled: i === last }),
         btn(ICON_TRASH.cloneNode(true), () => {
-          if (se.figures.length && !confirm(`Supprimer le saut ${i + 1} ?`)) return;
+          if (se.figures.length && !confirm(`Supprimer le vol ${i + 1} ?`)) return;
           s.series.splice(i, 1);
           if (!s.series.length) s.series.push(newSeries());
           commit();
-        }, { title: "Supprimer le saut" }),
+        }, { title: "Supprimer le vol" }),
       ),
     ),
     row,
@@ -437,7 +437,7 @@ function renderViewer(animate) {
 
   $("#viewer").replaceChildren(
     h("div", { class: "viewer-top" },
-      h("span", {}, `Saut ${it.si + 1} · figure ${it.fi + 1}/${se.figures.length}`),
+      h("span", {}, `Vol ${it.si + 1} · figure ${it.fi + 1}/${se.figures.length}`),
       btn("✕", closeViewer, { title: "Fermer (Échap)", cls: "close" }),
     ),
     h("div", { class: "viewer-main" },
@@ -448,7 +448,7 @@ function renderViewer(animate) {
     h("div", { class: "viewer-bottom" },
       btn("← Précédente", () => stepViewer(-1)),
       h("span", { class: "viewer-next" },
-        next.si !== it.si ? `Ensuite : Saut ${next.si + 1} – ` : pos === items.length - 1 ? "↻ " : "Ensuite : ",
+        next.si !== it.si ? `Ensuite : Vol ${next.si + 1} – ` : pos === items.length - 1 ? "↻ " : "Ensuite : ",
         itemLabel(next),
       ),
       btn("Suivante →", () => stepViewer(1), { cls: "primary" }),

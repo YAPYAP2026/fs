@@ -1,7 +1,7 @@
 {
   "name": "VR – Entraînements",
   "short_name": "VR",
-  "description": "Composer ses entraînements : sauts, figures et lettres.",
+  "description": "Composer ses entraînements : vols, figures et lettres.",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
