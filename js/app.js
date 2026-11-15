@@ -46,7 +46,7 @@ const btn = (label, onclick, { title, disabled, cls } = {}) =>
 
 // ---------- Données ----------
 
-const newSeries = () => ({ id: uid(), note: "", figures: [] });
+const newSeries = () => ({ id: uid(), figures: [] });
 const current = () => store;
 
 function ensureSeries() {
@@ -63,29 +63,28 @@ function commit() {
 const TRAINING_PARAM = "share";
 
 // Format du lien, court : une lettre par figure (son rang dans FIGURES), les sauts séparés par ",",
-// et la note optionnelle après "|" (encodée en URL). Ex. « AB3,7|Échauffement » = 3 sauts.
+// Ex. « AB3,7 » = 2 sauts. Un ancien lien peut contenir une note après "|" : elle est ignorée.
 const CODE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const FIG_CODE = Object.fromEntries(FIGURES.map((f, i) => [f.id, CODE[i]]));
 const FIG_BY_CODE = Object.fromEntries(FIGURES.map((f, i) => [CODE[i], f.id]));
 
 function encodeTraining() {
   return store.series
-    .map((se) => se.figures.map((id) => FIG_CODE[id]).join("") + (se.note ? `|${encodeURIComponent(se.note)}` : ""))
+    .map((se) => se.figures.map((id) => FIG_CODE[id]).join(""))
     .join(",");
 }
 
 function decodeTraining(token) {
   return token.split(",").map((part) => {
-    const [figs, note = ""] = part.split("|");
+    const [figs] = part.split("|");
     return {
       id: uid(),
-      note: decodeURIComponent(note),
       figures: [...figs].map((c) => FIG_BY_CODE[c]).filter(Boolean),
     };
   });
 }
 
-const hasContent = (s) => s.series.some((se) => se.figures.length || se.note);
+const hasContent = (s) => s.series.some((se) => se.figures.length);
 
 // L'adresse suit l'entraînement courant : le lien partagé est toujours à jour.
 function syncUrl() {
@@ -159,8 +158,8 @@ function seriesCard(s, se, i) {
     dataset: { id: se.id },
     onclick: (e) => {
       setActive(se.id);
-      // sélectionner un saut fait remonter la palette (téléphone), sauf en écrivant une note
-      if (!e.target.closest("textarea")) document.body.classList.add("palette-open");
+      // sélectionner un saut fait remonter la palette (téléphone)
+      document.body.classList.add("palette-open");
     },
     ondragstart: (e) => {
       if (e.target !== card) return;
@@ -197,18 +196,7 @@ function seriesCard(s, se, i) {
       ),
     ),
     row,
-    h("textarea", {
-      class: "note",
-      rows: 1,
-      placeholder: "Notes (objectifs, points de travail…)",
-      value: se.note,
-      oninput: (e) => {
-        se.note = e.target.value;
-        persist();
-      },
-    }),
   );
-  if (!se.note) card.querySelector(".note").classList.add("no-print");
   return card;
 }
 
