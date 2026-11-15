@@ -1,7 +1,8 @@
 // Service worker : l'application fonctionne hors ligne après une première visite.
 // Réseau d'abord (les mises à jour arrivent dès qu'on est en ligne), cache en secours.
+// « no-cache » : on revalide toujours auprès du serveur, sans se contenter du cache HTTP du navigateur.
 
-const CACHE = "vr-v1";
+const CACHE = "vr-v2";
 const SHELL = [
   "./",
   "index.html",
@@ -35,7 +36,7 @@ self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET" || !req.url.startsWith("http")) return;
   e.respondWith(
-    fetch(req)
+    fetch(req, { cache: "no-cache" })
       .then((res) => {
         if (res.ok || res.type === "opaque") {
           const copy = res.clone();
