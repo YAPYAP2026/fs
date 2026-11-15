@@ -529,3 +529,6 @@ ensureSeries();
 persist();
 renderPalette();
 render();
+
+// Application installable (PWA) : le service worker permet l'utilisation hors ligne.
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
