@@ -418,17 +418,12 @@ function stepViewer(d) {
 }
 
 const itemFigure = (it) => FIG_BY_ID[viewer.session.series[it.si].figures[it.fi]];
-const itemLabel = (it) => {
-  const f = itemFigure(it);
-  return f.type === "block" ? `${figureLabel(f)} · ${BLOCK_FRAME_LABELS[it.k]}` : figureLabel(f);
-};
 
 function renderViewer(animate) {
   const { session, items, pos, stage } = viewer;
   const it = items[pos];
   const se = session.series[it.si];
   const f = itemFigure(it);
-  const next = items[(pos + 1) % items.length];
 
   // petite frise des vignettes du bloc, l'étape en cours en surbrillance
   const strip = f.type === "block"
@@ -455,10 +450,6 @@ function renderViewer(animate) {
     ),
     h("div", { class: "viewer-bottom" },
       btn("← Précédente", () => stepViewer(-1)),
-      h("span", { class: "viewer-next" },
-        next.si !== it.si ? `Ensuite : Vol ${next.si + 1} – ` : pos === items.length - 1 ? "↻ " : "Ensuite : ",
-        itemLabel(next),
-      ),
       btn("Suivante →", () => stepViewer(1), { cls: "primary" }),
     ),
   );

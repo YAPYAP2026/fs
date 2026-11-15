@@ -287,7 +287,6 @@ body.viewer-open { overflow: hidden; }
 }
 .viewer-top { justify-content: space-between; color: #fff; font-size: 22px; font-weight: 600; }
 .viewer-bottom { justify-content: space-between; }
-.viewer-next { color: #fff; font-size: 20px; font-weight: 600; text-align: center; }
 #viewer button { padding: 8px 16px; }
 .viewer-main {
   flex: 1;
@@ -368,7 +367,6 @@ body.viewer-open { overflow: hidden; }
   /* Revoir : contrôles empilés, cibles de 48px */
   .viewer-top, .viewer-bottom { flex-wrap: wrap; padding: 10px 12px; }
   .viewer-bottom { justify-content: center; }
-  .viewer-next { order: -1; flex-basis: 100%; font-size: 19px; }
   #viewer button { min-height: 48px; padding: 10px 16px; }
   .viewer-bottom button { flex: 1 1 0; }
   .viewer-seq { font-size: 26px; }
