@@ -435,13 +435,21 @@ function renderViewer(animate) {
     ? h("div", { class: "viewer-strip" }, f.frames.map((_, k) => h("span", { class: k === it.k ? "on" : "" }, BLOCK_FRAME_LABELS[k])))
     : null;
 
+  // tout l'enchaînement du vol : la figure en cours en blanc, les autres en gris
+  const sequence = h("div", { class: "viewer-seq" },
+    se.figures.flatMap((id, j) => [
+      j ? h("span", { class: "sep" }, "·") : null,
+      h("span", { class: j === it.fi ? "on" : "" }, id),
+    ]),
+  );
+
   $("#viewer").replaceChildren(
     h("div", { class: "viewer-top" },
       h("span", {}, `Vol ${it.si + 1} · figure ${it.fi + 1}/${se.figures.length}`),
       btn("✕", closeViewer, { title: "Fermer (Échap)", cls: "close" }),
     ),
     h("div", { class: "viewer-main" },
-      h("h2", {}, figureLabel(f)),
+      sequence,
       strip,
       h("div", { class: "frame stage-frame" }, stage.svg),
     ),
