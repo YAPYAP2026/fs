@@ -42,9 +42,11 @@ export function frameEl(frame, label) {
 }
 
 // Rendu complet d'une figure : 1 vignette pour un random, 3 (départ/inter/arrivée) pour un bloc.
-export function figureVisual(f) {
+// Par défaut un bloc n'affiche que sa première vignette (même largeur qu'une lettre) ;
+// `full` les affiche toutes (page de contrôle).
+export function figureVisual(f, { full = false } = {}) {
   const v = document.createElement("div");
   v.className = `visual ${f.type}`;
-  f.frames.forEach((frame) => v.append(frameEl(frame, figureLabel(f))));
+  (full ? f.frames : f.frames.slice(0, 1)).forEach((frame) => v.append(frameEl(frame, figureLabel(f))));
   return v;
 }

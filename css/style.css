@@ -344,7 +344,7 @@ body.viewer-open { overflow: hidden; }
 
   /* boutons ← → × sous chaque figure : toujours visibles, faciles à toucher */
   .fig-tools { opacity: 1; }
-  .fig-tools button { min-width: 30px; min-height: 30px; padding: 0 6px; font-size: 15px; }
+  .fig-tools button { min-width: 26px; min-height: 30px; padding: 0 4px; font-size: 15px; }
 
   /* palette : bas de l'écran, vignettes plus grandes */
   #palette {
@@ -372,10 +372,7 @@ body.viewer-open { overflow: hidden; }
   .palette-filters input { font-size: 18px; padding: 10px 12px; }
   .palette-group { padding: 8px 10px; }
   /* palette : 3 colonnes pleine largeur, vignettes qui remplissent leur case */
-  #palette .palette-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  /* blocs : 2 par ligne */
-  #palette .palette-group.block .palette-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  #palette .pal-fig { padding: 4px; min-width: 0; }
+  #palette .palette-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }  #palette .pal-fig { padding: 4px; min-width: 0; }
   #palette .visual { width: 100%; }
   #palette .frame { flex: 1 1 0; width: auto; min-width: 0; }
 

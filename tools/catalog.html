@@ -27,7 +27,7 @@
   for (const f of FIGURES.filter((f) => !params.get("f") || f.id === params.get("f"))) {
     const item = document.createElement("div");
     item.className = "item";
-    const visual = figureVisual(f);
+    const visual = figureVisual(f, { full: true });
     if (params.get("ref")) {
       [...visual.children].forEach((frame, k) => {
         const name = f.type === "random" ? f.id : `${f.id}-${k + 1}`;
