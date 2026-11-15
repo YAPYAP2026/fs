@@ -19,6 +19,15 @@ Puis ouvrir http://localhost:8000. Un serveur est nécessaire car les modules JS
 - **Revoir** : ▶ affiche les figures une à une en plein écran (flèches du clavier, espace, swipe, Échap pour fermer).
 - **Partager** : copie le lien de l'entraînement courant. L'adresse se met à jour à chaque modification ; ouvrir le lien charge l'entraînement. Les données sont aussi conservées dans le navigateur (localStorage).
 
+## Installer comme application
+
+L'application est installable (PWA) et fonctionne hors ligne après une première visite :
+- **Android (Chrome)** : menu ⋮ → « Installer l'application » ou « Ajouter à l'écran d'accueil ».
+- **iPhone (Safari)** : Partager → « Sur l'écran d'accueil ».
+- **Ordinateur (Chrome/Edge)** : icône d'installation dans la barre d'adresse.
+
+Fichiers : `manifest.webmanifest`, `sw.js` (service worker, réseau d'abord puis cache), `icons/`.
+
 ## Fichiers
 
 - `assets/pages/` : pages extraites de `figures.pdf` (`python -I tools/extract_pages.py`).
