@@ -4,6 +4,7 @@
 
 import { FORMATIONS } from "./formations.js";
 import { formationSvg } from "./skydiver.js";
+import { DESCRIPTIONS } from "./descriptions.js";
 
 // Vignettes roses dans le PDF : figures réservées au niveau N1.
 const N1_ONLY = new Set(["3", "5", "10", "12", "16", "17"]);
@@ -49,4 +50,15 @@ export function figureVisual(f, { full = false } = {}) {
   v.className = `visual ${f.type}`;
   (full ? f.frames : f.frames.slice(0, 1)).forEach((frame) => v.append(frameEl(frame, figureLabel(f))));
   return v;
+}
+
+// Texte de la carte d'une figure : celui de js/descriptions.js, sinon un texte généré
+// d'après les flèches de rotation dessinées sur la vignette « Inter ».
+export function figureDescription(f) {
+  if (DESCRIPTIONS[f.id]) return DESCRIPTIONS[f.id];
+  if (f.type === "random") return "Figure à lettre : une seule formation à former.";
+  const turns = (f.frames[1]?.arrows ?? []).map((a) => a.t).filter(Boolean);
+  return `Bloc en trois formations : départ, inter, arrivée. ${
+    turns.length ? `Rotations à l'inter : ${turns.join(" · ")}.` : "Aucune rotation indiquée."
+  }`;
 }

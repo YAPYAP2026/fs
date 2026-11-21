@@ -1,4 +1,4 @@
-import { FIGURES, FIG_BY_ID, BLOCK_FRAME_LABELS, figureLabel, figureVisual } from "./figures.js";
+import { FIGURES, FIG_BY_ID, BLOCK_FRAME_LABELS, figureLabel, figureVisual, figureDescription, frameEl } from "./figures.js";
 import { load, save, uid } from "./storage.js";
 import { createStage } from "./animate.js";
 
@@ -207,6 +207,12 @@ function figTile(se, fid, j) {
   return h("div", {
     class: `fig ${f.type}`,
     draggable: "true",
+    title: "Voir la carte de la figure",
+    onclick: (e) => {
+      e.stopPropagation();
+      setActive(se.id);
+      openCard(fid);
+    },
     ondragstart: (e) => {
       e.stopPropagation();
       startDrag(e, { kind: "fig", figId: fid, from: se.id, index: j });
@@ -384,6 +390,44 @@ function onDrop(e, s, se, card, row) {
   commit();
 }
 
+// ---------- Carte d'une figure ----------
+
+// Titre, vignettes (pour un bloc : départ → inter → arrivée avec les flèches de rotation) et description.
+function openCard(fid) {
+  const f = FIG_BY_ID[fid];
+  if (!f) return;
+  const isBlock = f.type === "block";
+  const steps = f.frames.map((frame, k) =>
+    h("figure", { class: "card-step" },
+      frameEl(frame, figureLabel(f)),
+      isBlock ? h("figcaption", {}, BLOCK_FRAME_LABELS[k]) : null,
+    ),
+  );
+  $("#card").replaceChildren(
+    h("div", { class: "card-panel", role: "dialog", "aria-label": `Carte ${figureLabel(f)}` },
+      h("div", { class: "card-head" },
+        h("h2", {}, `${isBlock ? "Bloc" : "Lettre"} ${figureLabel(f)}`),
+        btn("✕", closeCard, { title: "Fermer (Échap)" }),
+      ),
+      h("div", { class: "card-frames" },
+        steps.flatMap((step, k) => (k ? [h("span", { class: "card-arrow", "aria-hidden": "true" }, "→"), step] : [step])),
+      ),
+      h("p", { class: "card-desc" }, figureDescription(f)),
+    ),
+  );
+  $("#card").hidden = false;
+  document.body.classList.add("card-open");
+}
+
+function closeCard() {
+  $("#card").hidden = true;
+  document.body.classList.remove("card-open");
+}
+
+$("#card").addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) closeCard();
+});
+
 // ---------- Revoir (pas à pas plein écran) ----------
 
 // Chaque étape = une vignette : 1 pour un random, 3 pour un bloc (départ, inter, arrivée).
@@ -459,6 +503,7 @@ function renderViewer(animate) {
 }
 
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !$("#card").hidden) return closeCard();
   if (!viewer) return;
   if (e.key === "Escape") closeViewer();
   else if (e.key === "ArrowRight" || e.key === " ") {

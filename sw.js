@@ -2,13 +2,14 @@
 // Réseau d'abord (les mises à jour arrivent dès qu'on est en ligne), cache en secours.
 // « no-cache » : on revalide toujours auprès du serveur, sans se contenter du cache HTTP du navigateur.
 
-const CACHE = "vr-v2";
+const CACHE = "vr-v3";
 const SHELL = [
   "./",
   "index.html",
   "css/style.css",
   "js/app.js",
   "js/animate.js",
+  "js/descriptions.js",
   "js/designs.js",
   "js/figures.js",
   "js/formations.js",
