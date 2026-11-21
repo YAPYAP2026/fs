@@ -4,7 +4,7 @@ import { createStage } from "./animate.js";
 
 let store = load();
 let activeSeriesId = null;
-let drag = null; // { kind: "fig", figId, from: seriesId | null, index } | { kind: "series", seriesId }
+let drag = null; // { figId, from: seriesId | null, index }
 let indicator = null; // { el, cls } : indicateur de dépôt affiché
 let viewer = null; // { session, items: [{ si, fi }], pos }
 
@@ -143,10 +143,11 @@ function renderSession() {
 
 function seriesCard(s, se, i) {
   const last = s.series.length - 1;
-  const move = (to) => {
-    s.series.splice(to, 0, s.series.splice(i, 1)[0]);
-    commit();
-  };
+  const move = (to) =>
+    flipMove(".series", i, to, () => {
+      s.series.splice(to, 0, s.series.splice(i, 1)[0]);
+      commit();
+    });
 
   const row = h("div", { class: "fig-row" },
     se.figures.map((fid, j) => figTile(se, fid, j)),
@@ -163,27 +164,13 @@ function seriesCard(s, se, i) {
       // sélectionner un vol fait remonter la palette (téléphone)
       document.body.classList.add("palette-open");
     },
-    ondragstart: (e) => {
-      if (e.target !== card) return;
-      startDrag(e, { kind: "series", seriesId: se.id });
-    },
-    ondragend: (e) => {
-      card.draggable = false;
-      endDrag(e);
-    },
-    ondragover: (e) => onDragOver(e, card, row),
+    ondragover: (e) => onDragOver(e, row),
     ondragleave: (e) => {
       if (!card.contains(e.relatedTarget)) clearIndicators();
     },
-    ondrop: (e) => onDrop(e, s, se, card, row),
+    ondrop: (e) => onDrop(e, s, se, row),
   },
     h("header", { class: "series-head" },
-      h("span", {
-        class: "handle no-print",
-        title: "Glisser pour réordonner les vols",
-        onmousedown: () => (card.draggable = true),
-        onmouseup: () => (card.draggable = false),
-      }, "⠿"),
       h("h2", {}, se.figures.length ? se.figures.join(" · ") : `Vol ${i + 1}`),
       h("div", { class: "actions no-print" },
         btn(ICON_PLAY.cloneNode(true), () => openViewer(s, i), { title: "Revoir", disabled: !se.figures.length, cls: "primary" }),
@@ -217,7 +204,7 @@ function figTile(se, fid, j) {
     },
     ondragstart: (e) => {
       e.stopPropagation();
-      startDrag(e, { kind: "fig", figId: fid, from: se.id, index: j });
+      startDrag(e, { figId: fid, from: se.id, index: j });
     },
     ondragend: endDrag,
   },
@@ -234,29 +221,36 @@ function figTile(se, fid, j) {
   );
 }
 
-// Déplace la figure j en position `to` ; les tuiles glissent (FLIP) vers leur nouvelle place.
-function swapFigures(se, j, to) {
-  const cardSel = `.series[data-id="${se.id}"] .fig`;
-  const before = [...document.querySelectorAll(cardSel)].map((t) => t.getBoundingClientRect());
-  // ordre d'origine de chaque tuile, une fois la figure déplacée
+// Animation FLIP : `apply` déplace l'élément j en position `to` (données + rendu) ; les éléments
+// de `selector` glissent de leur ancienne place vers la nouvelle.
+function flipMove(selector, j, to, apply) {
+  const before = [...document.querySelectorAll(selector)].map((el) => el.getBoundingClientRect());
+  // ordre d'origine de chaque élément, une fois le déplacement fait
   const order = before.map((_, k) => k);
   order.splice(to, 0, order.splice(j, 1)[0]);
 
-  se.figures.splice(to, 0, se.figures.splice(j, 1)[0]);
-  commit();
+  apply();
 
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  [...document.querySelectorAll(cardSel)].forEach((tile, k) => {
+  [...document.querySelectorAll(selector)].forEach((el, k) => {
     const from = before[order[k]];
-    const r = tile.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
     const dx = from.left - r.left;
     const dy = from.top - r.top;
     if (dx || dy) {
-      tile.animate(
+      el.animate(
         [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
-        { duration: 250, easing: "ease-out" },
+        { duration: 280, easing: "ease-out" },
       );
     }
+  });
+}
+
+// Déplace la figure j en position `to` dans son vol.
+function swapFigures(se, j, to) {
+  flipMove(`.series[data-id="${se.id}"] .fig`, j, to, () => {
+    se.figures.splice(to, 0, se.figures.splice(j, 1)[0]);
+    commit();
   });
 }
 
@@ -284,7 +278,7 @@ function renderPalette() {
             draggable: "true",
             title: `${figureLabel(f)} – cliquer pour ajouter`,
             onclick: () => addToActive(f.id),
-            ondragstart: (e) => startDrag(e, { kind: "fig", figId: f.id, from: null }),
+            ondragstart: (e) => startDrag(e, { figId: f.id, from: null }),
             ondragend: endDrag,
           },
             figureVisual(f),
@@ -319,7 +313,7 @@ function addToActive(fid) {
 function startDrag(e, data) {
   drag = data;
   e.dataTransfer.effectAllowed = data.from === null ? "copy" : "move";
-  e.dataTransfer.setData("text/plain", data.figId ?? data.seriesId);
+  e.dataTransfer.setData("text/plain", data.figId);
   document.body.classList.add("dragging");
 }
 
@@ -330,8 +324,8 @@ function endDrag() {
 }
 
 function clearIndicators() {
-  document.querySelectorAll(".drop-before, .drop-after, .drop-end").forEach((el) =>
-    el.classList.remove("drop-before", "drop-after", "drop-end"),
+  document.querySelectorAll(".drop-before, .drop-end").forEach((el) =>
+    el.classList.remove("drop-before", "drop-end"),
   );
   indicator = null;
 }
@@ -353,41 +347,28 @@ function figInsertIndex(e, row) {
   return idx === -1 ? tiles.length : idx;
 }
 
-function onDragOver(e, card, row) {
+function onDragOver(e, row) {
   if (!drag) return;
   e.preventDefault();
-  if (drag.kind === "fig") {
-    e.dataTransfer.dropEffect = drag.from === null ? "copy" : "move";
-    const idx = figInsertIndex(e, row);
-    const tiles = row.querySelectorAll(".fig");
-    if (idx < tiles.length) setIndicator(tiles[idx], "drop-before");
-    else setIndicator(row, "drop-end");
-  } else {
-    const r = card.getBoundingClientRect();
-    setIndicator(card, e.clientY < r.top + r.height / 2 ? "drop-before" : "drop-after");
-  }
+  e.dataTransfer.dropEffect = drag.from === null ? "copy" : "move";
+  const idx = figInsertIndex(e, row);
+  const tiles = row.querySelectorAll(".fig");
+  if (idx < tiles.length) setIndicator(tiles[idx], "drop-before");
+  else setIndicator(row, "drop-end");
 }
 
-function onDrop(e, s, se, card, row) {
+function onDrop(e, s, se, row) {
   if (!drag) return;
   e.preventDefault();
   e.stopPropagation();
-  if (drag.kind === "fig") {
-    let idx = figInsertIndex(e, row);
-    if (drag.from !== null) {
-      const src = s.series.find((x) => x.id === drag.from);
-      src.figures.splice(drag.index, 1);
-      if (src === se && drag.index < idx) idx--;
-    }
-    se.figures.splice(idx, 0, drag.figId);
-    activeSeriesId = se.id;
-  } else if (drag.seriesId !== se.id) {
-    const from = s.series.findIndex((x) => x.id === drag.seriesId);
-    const [moved] = s.series.splice(from, 1);
-    const r = card.getBoundingClientRect();
-    const target = s.series.indexOf(se) + (e.clientY < r.top + r.height / 2 ? 0 : 1);
-    s.series.splice(target, 0, moved);
+  let idx = figInsertIndex(e, row);
+  if (drag.from !== null) {
+    const src = s.series.find((x) => x.id === drag.from);
+    src.figures.splice(drag.index, 1);
+    if (src === se && drag.index < idx) idx--;
   }
+  se.figures.splice(idx, 0, drag.figId);
+  activeSeriesId = se.id;
   endDrag();
   commit();
 }
