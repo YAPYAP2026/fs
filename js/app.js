@@ -200,7 +200,7 @@ function figTile(se, fid, j) {
     onclick: (e) => {
       e.stopPropagation();
       setActive(se.id);
-      openCard(fid);
+      openCard(fid, { se, j });
     },
     ondragstart: (e) => {
       e.stopPropagation();
@@ -376,7 +376,8 @@ function onDrop(e, s, se, row) {
 // ---------- Carte d'une figure ----------
 
 // Titre, vignettes (pour un bloc : départ → inter → arrivée avec les flèches de rotation) et description.
-function openCard(fid) {
+// `ctx` { se, j } : la figure vient du vol se, en position j ; la carte propose alors de la déplacer ou la retirer.
+function openCard(fid, ctx = null) {
   const f = FIG_BY_ID[fid];
   if (!f) return;
   const isBlock = f.type === "block";
@@ -396,6 +397,15 @@ function openCard(fid) {
         steps.flatMap((step, k) => (k ? [h("span", { class: "card-arrow", "aria-hidden": "true" }, "→"), step] : [step])),
       ),
       h("p", { class: "card-desc" }, figureDescription(f)),
+      ctx && h("div", { class: "card-actions" },
+        btn("← Avant", () => { closeCard(); swapFigures(ctx.se, ctx.j, ctx.j - 1); }, { disabled: ctx.j === 0 }),
+        btn("Après →", () => { closeCard(); swapFigures(ctx.se, ctx.j, ctx.j + 1); }, { disabled: ctx.j === ctx.se.figures.length - 1 }),
+        btn("Retirer", () => {
+          closeCard();
+          ctx.se.figures.splice(ctx.j, 1);
+          commit();
+        }),
+      ),
     ),
   );
   $("#card").hidden = false;
