@@ -31,6 +31,8 @@ const svgIcon = (inner) => {
   return t.content.firstElementChild;
 };
 const ICON_PLAY = svgIcon('<polygon points="6 4 20 12 6 20 6 4" fill="currentColor"/>');
+const ICON_UP = svgIcon('<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>');
+const ICON_DOWN = svgIcon('<path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/>');
 const ICON_TRASH = svgIcon('<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>');
 
 const btn = (label, onclick, { title, disabled, cls } = {}) =>
@@ -185,8 +187,8 @@ function seriesCard(s, se, i) {
       h("h2", {}, se.figures.length ? se.figures.join(" · ") : `Vol ${i + 1}`),
       h("div", { class: "actions no-print" },
         btn(ICON_PLAY.cloneNode(true), () => openViewer(s, i), { title: "Revoir", disabled: !se.figures.length, cls: "primary" }),
-        btn("↑", () => move(i - 1), { title: "Monter", disabled: i === 0 }),
-        btn("↓", () => move(i + 1), { title: "Descendre", disabled: i === last }),
+        btn(ICON_UP.cloneNode(true), () => move(i - 1), { title: "Monter", disabled: i === 0 }),
+        btn(ICON_DOWN.cloneNode(true), () => move(i + 1), { title: "Descendre", disabled: i === last }),
         btn(ICON_TRASH.cloneNode(true), () => {
           if (se.figures.length && !confirm(`Supprimer le vol ${i + 1} ?`)) return;
           s.series.splice(i, 1);

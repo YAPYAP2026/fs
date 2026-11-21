@@ -118,6 +118,9 @@ main { padding: 16px 20px 40px; min-width: 0; }
 .series-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .series-head h2 { flex: 1; min-width: 0; margin: 0; font-size: 21px; overflow-wrap: anywhere; }
 .series-head .actions { margin-left: auto; display: flex; gap: 4px; }
+/* icônes centrées dans leur carré (le svg « en ligne » se calait sur la ligne de base) */
+.series-head .actions button { display: inline-flex; align-items: center; justify-content: center; }
+.series-head .actions svg { display: block; width: 26px; height: 26px; }
 .handle { cursor: grab; color: var(--muted); font-size: 18px; user-select: none; padding: 0 2px; }
 
 .fig-row {
